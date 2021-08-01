@@ -1,0 +1,44 @@
+    openapi: '3.0.0'
+    info:
+      title: Random Useless Facts API
+      description: A Flask-powered version of the Random Useless Facts API 
+      version: '1.0'
+    servers:
+      - url: http://localhost:8080/
+        description: Local development server
+    paths:
+      /status:
+        get:
+          summary: Fact load status
+          description: Returns a JSON summary of the fact load status, no. of facts and unique facts stored
+          responses:
+            '200':
+              description: A JSON object summary of the fact load status
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 1376b791-069e-4682-93d4-2e60cef071fb
+                      text:
+                        type: string
+                        example: The \"save\" icon on Microsoft Word shows a floppy disk with the shutter on backwards.
+              '400':
+                description: The specified fact id is not valid (not a string or wrong string format)
+              '404':
+                description: Fact with the specified id was not found
+      /facts:
+        get:
+          summary: Returns all stored fact ids
+          description: Returns a JSON array of fact ids or status JSON if no facts yet stored / on fact load error
+          responses:
+            '200':
+              description: A JSON array of fact id strings
+              content:
+                application/json:
+                  schema: 
+                    type: array
+                    items: 
+                      type: string

@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 from translate import Translator
+from yaml import load, Loader
 import requests
 import threading
 import time
@@ -11,11 +12,18 @@ app.config.update(
     DEBUG=True
 )
 
-# CHANGE RANGE
+# TODO:
+# Change range
+# Status codes 400 and 404
 
 @app.route('/')
 def home():
-    pass
+    try:
+        with open('schema.yml', 'r') as schema:
+            output = load(schema, Loader=Loader)
+            return jsonify(output)
+    except:
+        return jsonify('Schema load error')
 
 @app.route('/status')
 def status():
