@@ -1,13 +1,21 @@
 import requests
 import threading
 import time
+import os
 from translate import Translator
 from flask import jsonify, request
 from yaml import load, Loader
 
 
-def initialize_routes(app):
+def initialize_routes(app, auth):
+    @auth.verify_token
+    def verify_token(token):
+        if token == os.environ.get('RUF_API_TOKEN'):
+            return True
+
+
     @app.route('/')
+    @auth.login_required
     def home():
         try:
             with open('schema.yml', 'r') as schema:
