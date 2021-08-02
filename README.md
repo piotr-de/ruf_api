@@ -33,11 +33,11 @@ This mini-project outlines the possibilities offered by Flask in terms of quick 
 
 3. Set the RUF_API_TOKEN environment variable of your choice - anyone wishing to make calls to the API will need to provide it as a bearer token:
 
-    - Windows:
+    - Windows:\
         `set RUF_API_TOKEN=<your_chosen_token>`
-    - Linux:
+    - Linux:\
         `$ RUF_API_TOKEN=<your_chosen_token>`
-    - WSL2 with Ubuntu:
+    - WSL2 with Ubuntu:\
         `export RUF_API_TOKEN=<your_chosen_token>`
 
 
@@ -53,16 +53,15 @@ In order to access the full functionality of the API, you will require an API cl
 
 ## Endpoints
 
-    - `/`
-        Displays the OpenAPI schema
+`/`\
+    Displays the OpenAPI schema.
 
-    - `/status`
-        Displays a JSON object containing the fact load status as well as the number of facts (unique and overall) already loaded
+`/status`\
+    Displays a JSON object containing the fact load status as well as the number of facts (unique and overall) already loaded.
+    
+`/facts`\
+    Displays a JSON array of all the fact ids already loaded.
 
-    - `/facts`
-        Displays a JSON array of all the fact ids already loaded
-
-    - `/facts/<fact_id>`
-        Displays a JSON object representing a specific fact: its content, source etc.
-        You can pass an additonal parameter `lang` as a query string, containing a ISO 639-1 language code e.g., `?lang=de`, which will return the fact translated into your language of choice.
-
+`/facts/<fact_id>`\
+    Displays a JSON object representing a specific fact: its content, source etc.
+    You can pass an additonal parameter `lang` as a query string, containing a ISO 639-1 language code e.g., `?lang=de`, which will return the fact translated into your language of choice.
