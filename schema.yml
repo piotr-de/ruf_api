@@ -1,7 +1,7 @@
     openapi: '3.0.0'
     info:
       title: Random Useless Facts API
-      description: A Flask-powered version of the Random Useless Facts API 
+      description: A streamlined, Flask-powered version of the Random Useless Facts API 
       version: '1.0'
     servers:
       - url: http://localhost:8080/
@@ -13,22 +13,24 @@
           description: Returns a JSON summary of the fact load status, no. of facts and unique facts stored
           responses:
             '200':
-              description: A JSON object summary of the fact load status
+              description: JSON object summary of fact load status including no. of facts and uniqued facts stored by the app
               content:
                 application/json:
                   schema:
                     type: object
                     properties:
-                      id:
+                      status:
                         type: string
-                        example: 1376b791-069e-4682-93d4-2e60cef071fb
-                      text:
-                        type: string
-                        example: The \"save\" icon on Microsoft Word shows a floppy disk with the shutter on backwards.
-              '400':
-                description: The specified fact id is not valid (not a string or wrong string format)
-              '404':
-                description: Fact with the specified id was not found
+                        example: LOADING
+                      facts:
+                        type: object
+                        properties:
+                          total:
+                            type: integer
+                            example: 1000
+                          unique:
+                            type: integer
+                            example: 965
       /facts:
         get:
           summary: Returns all stored fact ids
@@ -42,3 +44,51 @@
                     type: array
                     items: 
                       type: string
+            '429':
+              description: Too many attempts, retry after a specified period of time
+      /facts/{id}?lang={lang}:
+        get:
+          summary: Returns a fact by id
+          parameters:
+            - name: id
+              in: path
+              required: true
+              description: The id of the fact to return
+              schema:
+                type: string
+            - name: lang
+              in: query string
+              required: false
+              description: The ISO 639-1 code of the language to translate the fact into
+              schema:
+                type: string
+          responses:
+            '200':
+              description: A detailed JSON object summary of the fact
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 1376b791-069e-4682-93d4-2e60cef071fb
+                      text:
+                        type: string
+                        example: The "save" icon on Microsoft Word shows a floppy disk with the shutter on backwards.
+                      source:
+                        type: string
+                        example: djtech.net
+                      source_url:
+                        type: string
+                        example: http://www.djtech.net/humor/useless_facts.htm
+                      language:
+                        type: string
+                        example: en
+                      permalink:
+                        type: string
+                        example: https://uselessfacts.jsph.pl/1376b791-069e-4682-93d4-2e60cef071fb
+              '404':
+                description: Fact with the specified id was not found
+              '429':
+                description: Too many attempts, retry after a specified period of time

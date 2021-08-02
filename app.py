@@ -62,14 +62,14 @@ def fact(fact_id):
         response = requests.get(f'https://uselessfacts.jsph.pl/{fact_id}.json')
         if response.status_code == 429:
             delay = int(response.headers['Retry-After'])
-            return jsonify(f'Too Many Attempts. Try again in {delay} seconds.'), 429
+            return jsonify({'HTTP Response Code': f'429. Too Many Attempts. Try again in {delay} seconds.'}), 429
         elif response.status_code == 200:
             fact = response.json()
         else:
-            return jsonify(response.status_code)
+            return jsonify({'HTTP Response Code': response.status_code}), response.status_code
     to_lang = request.args.get('lang')
-    from_lang = fact['language']
     if to_lang is not None:
+        from_lang = fact['language']
         translation = translate(fact['text'], from_lang, to_lang)
         fact['language'] = fact['language'] if fact['text'] == translation else to_lang
         fact['text'] = translation
@@ -85,7 +85,7 @@ def start_loader():
         facts = []
         try:
             error = False
-            for _ in range(10):
+            for _ in range(1000):
                 response = fetch_fact()
                 if response.status_code == 200:
                     facts.append(response.json())
