@@ -1,21 +1,20 @@
 import requests
 import threading
 import time
-import os
 from translate import Translator
 from flask import jsonify, request
 from yaml import load, Loader
 
 
-def initialize_routes(app, auth):
+def initialize_routes(app, auth, env_token):
     @auth.verify_token
     def verify_token(token):
-        if token == os.environ.get('RUF_API_TOKEN'):
+        if token is not None and token == env_token:
             return True
+        return False
 
 
     @app.route('/')
-    @auth.login_required
     def home():
         try:
             with open('schema.yml', 'r') as schema:
@@ -26,6 +25,7 @@ def initialize_routes(app, auth):
 
 
     @app.route('/status')
+    @auth.login_required
     def status():
         global facts, error
         if error is True:
@@ -46,6 +46,7 @@ def initialize_routes(app, auth):
 
 
     @app.route('/facts')
+    @auth.login_required
     def facts():
         fact_ids = refresh_facts()
         if len(fact_ids) == 0:
@@ -54,6 +55,7 @@ def initialize_routes(app, auth):
 
 
     @app.route('/facts/<fact_id>')
+    @auth.login_required
     def fact(fact_id):
         global facts
         fact_ids = refresh_facts()
